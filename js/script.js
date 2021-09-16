@@ -41,7 +41,6 @@ window.addEventListener('load', () =>{
     paymentSelector.selectedIndex = 1
     divPayment.forEach(div => div.style.display = 'none')
     divPayment[0].style.display = ''
-    hasCheckedBoxes = false
 
 })
 
@@ -130,15 +129,13 @@ activitiesField.addEventListener('change', (e) =>{
                 if (checkboxActivities[i].getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && 
                     checkboxActivities[i] !== e.target ) {
                         checkboxActivities[i].disabled = true
-                        checkboxActivities[i].checked = false
+                        
                     }
             }
         } else {
             totalCost = totalCost - parseInt(e.target.getAttribute("data-cost"))
-            const checkChecked = (checkbox) =>{checkbox.checked}
-            if (Array.from(checkboxActivities).some(checkChecked) === false){
+            if (checkboxActivities.some(checkbox =>{checkbox.checked}) === false){
                 hasCheckedBoxes = false
-                
             }
             for (let i = 0; i < checkboxActivities.length; i++){
                 if (checkboxActivities[i].getAttribute('data-day-and-time') === e.target.getAttribute('data-day-and-time') && 
@@ -251,7 +248,6 @@ function isValidActivities(){
             activitiesField.classList.add('valid')
             activitiesField.lastElementChild.classList.add('hint')
             
-            
         } else {
             activitiesField.classList.add('not-valid')
             activitiesField.classList.add('valid')
@@ -270,7 +266,7 @@ function checkIfFormIsValid(name, email){
 
 
 //There's probably a better way to do this...
-function displayError(name, email, ccNumber, zipCode, cVV, checkboxes){
+function displayError(name, email, ccNumber, zipCode, cVV){
     isValidName(name)
     isValidEmail(email)
     isValidCVV(cVV)
@@ -291,7 +287,7 @@ form.addEventListener('submit', (e) =>{
                 cVVInput.value) === false ||
             checkIfFormIsValid(nameInput.value,
                  emailInput.value) === false || 
-            isValidActivities(checkboxActivities) === false ) {
+            isValidActivities() === false ) {
                 displayError(nameInput.value, 
                     emailInput.value, 
                     creditCardInput.value, 
@@ -301,7 +297,8 @@ form.addEventListener('submit', (e) =>{
                 e.preventDefault() 
             }
     } else {
-        if (!checkIfFormIsValid(nameInput.value, 
+        if (!checkIfFormIsValid(
+            nameInput.value, 
             emailInput.value) ||
              isValidActivities() === false  ){
             displayError(
@@ -310,7 +307,7 @@ form.addEventListener('submit', (e) =>{
                  creditCardInput.value, 
                  zipInput.value, 
                  cVVInput.value, 
-                  )
+                 checkboxActivities )
             e.preventDefault()
      }
     
