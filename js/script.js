@@ -135,7 +135,7 @@ activitiesField.addEventListener('change', (e) =>{
             }
         } else {
             totalCost = totalCost - parseInt(e.target.getAttribute("data-cost"))
-            if (checkboxActivities.some(checkbox =>{checkbox.checked}) === false){
+            if (Array.from(checkboxActivities).some(checkbox =>{checkbox.checked}) === false){
                 hasCheckedBoxes = false
             }
             for (let i = 0; i < checkboxActivities.length; i++){
@@ -198,6 +198,7 @@ function isValidName(name) {
 
 function isValidEmail(email) {
     if (/^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email) === false){
+        
         showErrorHints(emailInput)
         return /^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email)
     } else {
@@ -208,10 +209,20 @@ function isValidEmail(email) {
 }
 
 function isValidCreditCardNumber(creditCard){
-    if (/^\d{13,16}$/.test(creditCard) === false){
+    if (/^\d{13,16}$/.test(creditCard) === false && /[A-a]+/.test(creditCard)){
+        creditCardInput.parentNode.lastElementChild.textContent ='Your Credit Card number can\'t contain letters.'
         showErrorHints(creditCardInput)
         return /^\d{13,16}$/.test(creditCard)
-    } else {
+    } else if (/^\d{1,12}$/.test(creditCard)){
+        creditCardInput.parentNode.lastElementChild.textContent= `Your Credit Card number must be at least 13 digits.`
+        showErrorHints(creditCardInput)
+        return /^\d{13,16}$/.test(creditCard)
+    } else if(/^\d{17,}$/.test(creditCard)){
+        creditCardInput.parentNode.lastElementChild.textContent=`Your Credit Card number must be at most 16 digits long.`
+        showErrorHints(creditCardInput)
+        return /^\d{13,16}$/.test(creditCard)
+
+    }else if (/^\d{13,16}$/.test(creditCard)){
         hideErrorHints(creditCardInput)
         return true
     }
@@ -220,27 +231,50 @@ function isValidCreditCardNumber(creditCard){
 }
 
 function isValidZipCode(zipCode){
-    if (/^\d{5}$/.test(zipCode) === false){
+    if (/^\d{5}$/.test(zipCode) === false && /[A-a]+/.test(zipCode)){
+        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can\'t contain letters'
         showErrorHints(zipInput)
         return /^\d{5}$/.test(zipCode)
-    } else {
+    } else if(/^\d{1,4}$/.test(zipCode)){
+        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number must be at least 5 digits long.'
+        showErrorHints(zipInput)
+        return /^\d{5}$/.test(zipCode)
+    } else if(/^\d{6,}$/.test(zipCode)){
+        zipInput.parentNode.lastElementChild.textContent='Your Zipcode is too long! (Zipcodes are 5 digits long.)'
+        showErrorHints(zipInput)
+        return /^\d{5}$/.test(zipCode)
+
+    } else if(/^\d{5}$/.test(zipCode)){
         hideErrorHints(zipInput)
         return true
     }
+
+    } 
+       
+    
   
 
-}
+
 function isValidCVV(cVV){
-    if (/^\d{3}$/.test(cVV) === false){
+    if (/^[A-a]+$/.test(cVV)){ //marche par intermittence???
+        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can\'t contain letters.'
         showErrorHints(cVVInput)
         return /^\d{3}$/.test(cVV)
-    } else {
+    } else if (/^\d{1,2}$/.test(cVV)) {
+        cVVInput.parentNode.lastElementChild.textContent='Your CVV number is too short (CVV numbers must be 3 digits long.)'
+        showErrorHints(cVVInput)
+        return /^\d{3}$/.test(cVV)
+    } else if (/^\d{4,}$/.test(cVV)){
+        cVVInput.parentNode.lastElementChild.textContent='Your CVV number is too long! (CVV numbers must be 3 digits long.)'
+        showErrorHints(cVVInput)
+        return /^\d{3}$/.test(cVV)
+
+    } else if (/^\d{3}$/.test(cVV)){
         hideErrorHints(cVVInput)
         return true
     }
+    }
    
-   
-}
 function isValidActivities(){
     
     
