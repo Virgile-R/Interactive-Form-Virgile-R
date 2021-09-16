@@ -308,7 +308,7 @@ form.addEventListener('submit', (e) =>{
                  creditCardInput.value, 
                  zipInput.value, 
                  cVVInput.value, 
-                 checkboxActivities )
+                  )
             e.preventDefault()
      }
     
