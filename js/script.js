@@ -209,8 +209,8 @@ function isValidEmail(email) {
 }
 
 function isValidCreditCardNumber(creditCard){
-    if (/^\d{13,16}$/.test(creditCard) === false && /[A-a]+/.test(creditCard)){
-        creditCardInput.parentNode.lastElementChild.textContent ='Your Credit Card number can\'t contain letters.'
+    if (/^\D+$/i.test(creditCard)){
+        creditCardInput.parentNode.lastElementChild.textContent ='Your Credit Card number can only contains numbers.'
         showErrorHints(creditCardInput)
         return /^\d{13,16}$/.test(creditCard)
     } else if (/^\d{1,12}$/.test(creditCard)){
@@ -231,11 +231,16 @@ function isValidCreditCardNumber(creditCard){
 }
 
 function isValidZipCode(zipCode){
-    if (/^\d{5}$/.test(zipCode) === false && /[A-a]+/.test(zipCode)){
-        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can\'t contain letters'
+    if (/^\D+$/i.test(zipCode)){
+        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can only contains numbers.'
         showErrorHints(zipInput)
         return /^\d{5}$/.test(zipCode)
-    } else if(/^\d{1,4}$/.test(zipCode)){
+    } else if(/^\s+/.test(zipCode)){
+        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can\'t be blank.'
+        showErrorHints(zipInput)
+        return /^\d{3}$/.test(zipCode)
+
+    }else if(/^\d{1,4}$/.test(zipCode)){
         zipInput.parentNode.lastElementChild.textContent='Your ZipCode number must be at least 5 digits long.'
         showErrorHints(zipInput)
         return /^\d{5}$/.test(zipCode)
@@ -256,11 +261,16 @@ function isValidZipCode(zipCode){
 
 
 function isValidCVV(cVV){
-    if (/^[A-a]+$/.test(cVV)){ //marche par intermittence???
-        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can\'t contain letters.'
+    if (/^\D+$/i.test(cVV)){ 
+        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can only contains numbers.'
         showErrorHints(cVVInput)
         return /^\d{3}$/.test(cVV)
-    } else if (/^\d{1,2}$/.test(cVV)) {
+    } else if(/^\s+/.test(cVV)){
+        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can\'t be blank.'
+        showErrorHints(cVVInput)
+        return /^\d{3}$/.test(cVV)
+
+    }else if (/^\d{1,2}$/.test(cVV)) {
         cVVInput.parentNode.lastElementChild.textContent='Your CVV number is too short (CVV numbers must be 3 digits long.)'
         showErrorHints(cVVInput)
         return /^\d{3}$/.test(cVV)
