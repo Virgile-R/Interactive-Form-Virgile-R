@@ -41,6 +41,7 @@ window.addEventListener('load', () =>{
     paymentSelector.selectedIndex = 1
     divPayment.forEach(div => div.style.display = 'none')
     divPayment[0].style.display = ''
+    hasCheckedBoxes = false
 
 })
 
