@@ -176,82 +176,102 @@ paymentSelector.addEventListener('change', (e) =>{
 /***
  * Helper functions for form validation
  */
-function showErrorHints(inputField){
+
+/***
+ * ShowErrorHints: takes an HTML element as first argument and a string with an error message as second argument. Display error message and hints and returns false
+ */
+
+function showErrorHints(inputField, errorMessage = `Please enter correct information.`){
     inputField.parentNode.classList.add('not-valid')
     inputField.parentNode.classList.remove('valid')
     inputField.parentNode.lastElementChild.classList.remove('hint')
+    inputField.parentNode.lastElementChild.textContent = errorMessage
+    return false
 }
+
 function hideErrorHints(inputField){
     inputField.parentNode.classList.add('valid')
     inputField.parentNode.classList.remove('not-valid')
     inputField.parentNode.lastElementChild.classList.add('hint')
+    return true
 }
 function isValidName(name) {
-    if (/^\S+ ?(\S+)?/i.test(name) === false){
-        showErrorHints(nameInput)
-        return /^\S+ ?(\S+)?/i.test(name)
+    if (/^\s+ ?(\s+)?/i.test(name.value) || name.value === ""){
+        showErrorHints(name, 'Name field cannot be blank')
+        
     } else {
-        hideErrorHints(nameInput)
-        return /^\S+ ?(\S+)?/i.test(name)
+        hideErrorHints(name)
+        
     }
 }
 
 function isValidEmail(email) {
-    if (/^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email) === false){
+    if (/^\s+/.test(email.value) || email.value === "") { 
         
-        showErrorHints(emailInput)
-        return /^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email)
+        
+        showErrorHints(email, 'Email field cannot be blank')
+       
+    
+    } else if (/^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email.value) === false){
+       
+      
+        showErrorHints(email, 'Email adresses must be formatted correctly (example@example.org).')
+        
     } else {
-        hideErrorHints(emailInput)
-        return true
+        hideErrorHints(email)
+       
     }
    
 }
 
 function isValidCreditCardNumber(creditCard){
-    if (/^\D+$/i.test(creditCard)){
-        creditCardInput.parentNode.lastElementChild.textContent ='Your Credit Card number can only contains numbers.'
-        showErrorHints(creditCardInput)
-        return /^\d{13,16}$/.test(creditCard)
-    } else if (/^\d{1,12}$/.test(creditCard)){
-        creditCardInput.parentNode.lastElementChild.textContent= `Your Credit Card number must be at least 13 digits.`
-        showErrorHints(creditCardInput)
-        return /^\d{13,16}$/.test(creditCard)
-    } else if(/^\d{17,}$/.test(creditCard)){
-        creditCardInput.parentNode.lastElementChild.textContent=`Your Credit Card number must be at most 16 digits long.`
-        showErrorHints(creditCardInput)
-        return /^\d{13,16}$/.test(creditCard)
+    if (/^\s+/.test(creditCard.value) || creditCard.value === "") {
+        
+        showErrorHints(creditCard, 'Your Credit Card number can\'t be blank.')
+        
+    }else if (/^\D+$/i.test(creditCard.value)){
+        
+        showErrorHints(creditCard, 'Your Credit Card number can only contains numbers.')
+        
+    } else if (/^\d{1,12}$/.test(creditCard.value)){
+        
+        showErrorHints(creditCard, `Your Credit Card number must be at least 13 digits.`)
+       
+    } else if(/^\d{17,}$/.test(creditCard.value)){
+        
+        showErrorHints(creditCard, `Your Credit Card number must be at most 16 digits long.`)
+        
 
-    }else if (/^\d{13,16}$/.test(creditCard)){
-        hideErrorHints(creditCardInput)
-        return true
+    }else if (/^\d{13,16}$/.test(creditCard.value)){
+        hideErrorHints(creditCard)
+       
     }
    
 
 }
 
 function isValidZipCode(zipCode){
-    if (/^\D+$/i.test(zipCode)){
-        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can only contains numbers.'
-        showErrorHints(zipInput)
-        return /^\d{5}$/.test(zipCode)
-    } else if(/^\s+/.test(zipCode)){
-        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number can\'t be blank.'
-        showErrorHints(zipInput)
-        return /^\d{3}$/.test(zipCode)
+    if (/^\s+/.test(zipCode.value) || zipCode.value === ""){
+       
+        showErrorHints(zipCode, 'Your ZipCode number can\'t be blank.')
+        
+    } else if(/^\D+$/i.test(zipCode.value)){
+       
+        showErrorHints(zipCode, 'Your ZipCode number can only contains numbers.')
+       
 
-    }else if(/^\d{1,4}$/.test(zipCode)){
-        zipInput.parentNode.lastElementChild.textContent='Your ZipCode number must be at least 5 digits long.'
-        showErrorHints(zipInput)
-        return /^\d{5}$/.test(zipCode)
-    } else if(/^\d{6,}$/.test(zipCode)){
-        zipInput.parentNode.lastElementChild.textContent='Your Zipcode is too long! (Zipcodes are 5 digits long.)'
-        showErrorHints(zipInput)
-        return /^\d{5}$/.test(zipCode)
+    }else if(/^\d{1,4}$/.test(zipCode.value)){
+      
+        showErrorHints(zipCode, 'Your ZipCode number must be at least 5 digits long.')
+        
+    } else if(/^\d{6,}$/.test(zipCode.value)){
+       
+        showErrorHints(zipCode, 'Your Zipcode is too long! (Zipcodes are 5 digits long.)')
+        
 
-    } else if(/^\d{5}$/.test(zipCode)){
-        hideErrorHints(zipInput)
-        return true
+    } else if(/^\d{5}$/.test(zipCode.value)){
+        hideErrorHints(zipCode)
+       
     }
 
     } 
@@ -261,26 +281,30 @@ function isValidZipCode(zipCode){
 
 
 function isValidCVV(cVV){
-    if (/^\D+$/i.test(cVV)){ 
-        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can only contains numbers.'
-        showErrorHints(cVVInput)
-        return /^\d{3}$/.test(cVV)
-    } else if(/^\s+/.test(cVV)){
-        cVVInput.parentNode.lastElementChild.textContent='Your CVV number can\'t be blank.'
-        showErrorHints(cVVInput)
-        return /^\d{3}$/.test(cVV)
+    if (/^\s+/.test(cVV.value) || cVV.value === ""){
+        
+        
+        showErrorHints(cVV, 'Your CVV number can\'t be blank.' )
+       
+    } else if(/^[A-z]+$/i.test(cVV.value)){
+       
+       
+        showErrorHints(cVV, 'Your CVV number can only contains numbers.')
+       
 
-    }else if (/^\d{1,2}$/.test(cVV)) {
-        cVVInput.parentNode.lastElementChild.textContent='Your CVV number is too short (CVV numbers must be 3 digits long.)'
-        showErrorHints(cVVInput)
-        return /^\d{3}$/.test(cVV)
-    } else if (/^\d{4,}$/.test(cVV)){
-        cVVInput.parentNode.lastElementChild.textContent='Your CVV number is too long! (CVV numbers must be 3 digits long.)'
-        showErrorHints(cVVInput)
-        return /^\d{3}$/.test(cVV)
+    }else if (/^\d{1,2}$/.test(cVV.value)) {
+        
+      
+        showErrorHints(cVV, 'Your CVV number is too short (CVV numbers must be 3 digits long.)')
+       
+    } else if (/^\d{4,}$/.test(cVV.value)){
+       
+        
+        showErrorHints(cVV, 'Your CVV number is too long! (CVV numbers must be 3 digits long.)')
+      
 
-    } else if (/^\d{3}$/.test(cVV)){
-        hideErrorHints(cVVInput)
+    } else if (/^\d{3}$/.test(cVV.value)){
+        hideErrorHints(cVV)
         return true
     }
     }
@@ -327,31 +351,31 @@ function displayError(name, email, ccNumber, zipCode, cVV){
 form.addEventListener('submit', (e) =>{
     if (paymentSelector.selectedIndex === 1){
         if (checkIfCCisValid (
-                creditCardInput.value, 
-                zipInput.value, 
-                cVVInput.value) === false ||
-            checkIfFormIsValid(nameInput.value,
-                 emailInput.value) === false || 
+                creditCardInput,
+                zipInput, 
+                cVVInput) === false ||
+            checkIfFormIsValid(nameInput,
+                 emailInput) === false || 
             isValidActivities() === false ) {
-                displayError(nameInput.value, 
-                    emailInput.value, 
-                    creditCardInput.value, 
-                    zipInput.value, 
-                    cVVInput.value, 
+                displayError(nameInput, 
+                    emailInput, 
+                    creditCardInput, 
+                    zipInput, 
+                    cVVInput, 
                     checkboxActivities )
                 e.preventDefault() 
             }
     } else {
         if (!checkIfFormIsValid(
-            nameInput.value, 
-            emailInput.value) ||
+            nameInput, 
+            emailInput) ||
              isValidActivities() === false  ){
             displayError(
-                 nameInput.value,
-                 emailInput.value, 
-                 creditCardInput.value, 
-                 zipInput.value, 
-                 cVVInput.value, 
+                 nameInput,
+                 emailInput, 
+                 creditCardInput,
+                 zipInput, 
+                 cVVInput, 
                   )
             e.preventDefault()
      }
@@ -365,22 +389,22 @@ form.addEventListener('submit', (e) =>{
 */
 //on the fly validation for text input
 inputArray.forEach(input => {
-    input.addEventListener('keyup', (e) => {
+    input.addEventListener('input', (e) => {
     switch(e.target.name){
         case "user-name": 
-            isValidName(input.value)
+            isValidName(input)
             break
         case "user-email":
-            isValidEmail(input.value)
+            isValidEmail(input)
             break
         case "user-cc-num":
-            isValidCreditCardNumber(input.value)
+            isValidCreditCardNumber(input)
             break
         case "user-zip":
-            isValidZipCode(input.value)
+            isValidZipCode(input)
             break
         case "user-cvv":
-            isValidCVV(input.value)
+            isValidCVV(input)
             break
         default:
             break
@@ -389,6 +413,31 @@ inputArray.forEach(input => {
         }
     })
 })
+// inputArray.forEach(input => {
+//     input.addEventListener('click', (e) => {
+//     switch(e.target.name){
+//         case "user-name": 
+//             isValidName(input)
+//             break
+//         case "user-email":
+//             isValidEmail(input)
+//             break
+//         case "user-cc-num":
+//             isValidCreditCardNumber(input)
+//             break
+//         case "user-zip":
+//             isValidZipCode(input)
+//             break
+//         case "user-cvv":
+//             isValidCVV(input)
+//             break
+//         default:
+//             break
+
+
+//         }
+//     })
+// })
 
 /***
  * accessibility section: makes tab navigation easier and provide useful hints
