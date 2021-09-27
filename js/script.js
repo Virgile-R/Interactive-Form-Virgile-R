@@ -185,7 +185,7 @@ function hideErrorHints(inputField) {
   return true;
 }
 /***
- * Various functions to validate forms. returns true and calls hideErrorHints if the form is valid, false and calls showErrorHints if not
+ * Various functions to validate forms. calls hideErrorHints if the form is valid, calls showErrorHints if not
  */
 
 function isValidName(name) {
