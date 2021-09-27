@@ -3,15 +3,18 @@
  * **/
 
 //variables for JobRole section
-const otherJobRoleField = document.querySelector("#other-job-role");
 const jobRoleSelect = document.querySelector("#title");
 //variables for Tshirt Section
 const colorSelector = document.querySelector("#color");
+colorSelector.selectedIndex = 0
 const designSelector = document.querySelector("#design");
+designSelector.selectedIndex = 0
 const colorSelectorOptions = colorSelector.querySelectorAll("option");
 //variables for activities section
 const activitiesField = document.querySelector("#activities");
 let totalCost = 0;
+let checkedboxes = [];
+const checkboxActivities = activitiesField.querySelectorAll("input");
 //variables for payment section
 const paymentSelector = document.querySelector("#payment");
 const divPayment = [
@@ -29,9 +32,11 @@ const cVVInput = form.querySelector("#cvv");
 //variables for validation
 const inputArray = [nameInput, emailInput, creditCardInput, zipInput, cVVInput];
 let hasCheckedBoxes = false;
-//variables for accessibility
-let checkedboxes = [];
-const checkboxActivities = activitiesField.querySelectorAll("input");
+
+/***
+ * Event Listeners
+ */
+
 /***
  * focuses on the name field on load, hides the form 'Other job roles' on load, resets the activities
  */
@@ -57,6 +62,8 @@ window.addEventListener("load", () => {
  */
 
 jobRoleSelect.addEventListener("change", (e) => {
+const otherJobRoleField = document.querySelector("#other-job-role");
+
   if (e.target.value === "other") {
     otherJobRoleField.style.display = "";
   } else {
@@ -83,31 +90,12 @@ designSelector.addEventListener("change", (e) => {
     for (let i = 1; i < colorSelectorOptions.length; i++) {
       if (colorSelectorOptions[i].getAttribute("data-theme") != "heart js") {
         colorSelectorOptions[i].style.display = "none";
-        colorSelector.selectedIndex = 3;
+        colorSelector.selectedIndex = 4;
       }
     }
   }
 });
-designSelector.addEventListener("click", (e) => {
-  colorSelectorOptions.forEach((option) => (option.style.display = ""));
-  colorSelector.disabled = false;
 
-  if (e.target.value === "js puns") {
-    for (let i = 1; i < colorSelectorOptions.length; i++) {
-      if (colorSelectorOptions[i].getAttribute("data-theme") != "js puns") {
-        colorSelectorOptions[i].style.display = "none";
-        colorSelector.selectedIndex = 1;
-      }
-    }
-  } else {
-    for (let i = 1; i < colorSelectorOptions.length; i++) {
-      if (colorSelectorOptions[i].getAttribute("data-theme") != "heart js") {
-        colorSelectorOptions[i].style.display = "none";
-        colorSelector.selectedIndex = 3;
-      }
-    }
-  }
-});
 /***
  * handles the activities section, adding cost when user checks the boxes. Shows error message if all boxes are unchecked
  */
@@ -174,7 +162,7 @@ paymentSelector.addEventListener("change", (e) => {
  */
 
 /***
- * ShowErrorHints: takes an HTML element as first argument and a string with an error message as second argument. Display error message and hints and returns false
+ *  ShowErrorHints: takes an HTML element as first argument and a string with an error message as second argument. Display error message and hints and returns false
  */
 
 function showErrorHints(
@@ -187,13 +175,19 @@ function showErrorHints(
   inputField.parentNode.lastElementChild.textContent = errorMessage;
   return false;
 }
-
+/***
+ * HideErrorHints: takes an HTML element as an argument. LEt the user know that the form is valid 
+ */
 function hideErrorHints(inputField) {
   inputField.parentNode.classList.add("valid");
   inputField.parentNode.classList.remove("not-valid");
   inputField.parentNode.lastElementChild.classList.add("hint");
   return true;
 }
+/***
+ * Various functions to validate forms. returns true and calls hideErrorHints if the form is valid, false and calls showErrorHints if not
+ */
+
 function isValidName(name) {
   if (/^\s+ ?(\s+)?/i.test(name.value) || name.value === "") {
     return showErrorHints(name, "Name field cannot be blank");
@@ -205,7 +199,7 @@ function isValidName(name) {
 function isValidEmail(email) {
   if (/^\s+/.test(email.value) || email.value === "") {
     return showErrorHints(email, "Email field cannot be blank");
-  } else if (/^[\w^@\S]+@[\w^@\S]+\.\w{2,}$/i.test(email.value) === false) {
+  } else if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(email.value) === false) {
     return showErrorHints(
       email,
       "Email adresses must be formatted correctly (example@example.org)."
@@ -219,7 +213,7 @@ function isValidCreditCardNumber(creditCard) {
   if (/^\s+/.test(creditCard.value) || creditCard.value === "") {
     return showErrorHints(
       creditCard,
-      "Your Credit Card number can't be blank."
+      "Your Credit Card number cannot be blank."
     );
   } else if (/^\D+$/i.test(creditCard.value)) {
     return showErrorHints(
@@ -243,7 +237,7 @@ function isValidCreditCardNumber(creditCard) {
 
 function isValidZipCode(zipCode) {
   if (/^\s+/.test(zipCode.value) || zipCode.value === "") {
-    return showErrorHints(zipCode, "Your ZipCode number can't be blank.");
+    return showErrorHints(zipCode, "Your ZipCode number cannot be blank.");
   } else if (/^\D+$/i.test(zipCode.value)) {
     return showErrorHints(
       zipCode,
@@ -266,7 +260,7 @@ function isValidZipCode(zipCode) {
 
 function isValidCVV(cVV) {
   if (/^\s+/.test(cVV.value) || cVV.value === "") {
-    return showErrorHints(cVV, "Your CVV number can't be blank.");
+    return showErrorHints(cVV, "Your CVV number cannot be blank.");
   } else if (/^[A-z]+$/i.test(cVV.value)) {
     return showErrorHints(cVV, "Your CVV number can only contains numbers.");
   } else if (/^\d{1,2}$/.test(cVV.value)) {
