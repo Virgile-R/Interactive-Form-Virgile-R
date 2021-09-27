@@ -1,5 +1,5 @@
 ###################\
-Conference registration page
+Conference registration page\
 Created for TeamTreehouse.com Full Stack JavaScript Dev Module 3\
 ###################
 
